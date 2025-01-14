@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 
-interface City {
+export interface City {
   id: string;
   name: string;
   country: string;
