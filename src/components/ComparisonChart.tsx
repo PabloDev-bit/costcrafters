@@ -36,13 +36,25 @@ export const ComparisonChart = ({
             left: 20,
             bottom: 5,
           }}
+          barCategoryGap="20%"
+          barGap={8}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200" />
           <XAxis dataKey="category" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey="city1Value" name={city1Name} fill="#5B21B6" />
-          <Bar dataKey="city2Value" name={city2Name} fill="#0D9488" />
+          <Bar
+            dataKey="city1Value"
+            name={city1Name}
+            fill="#6366F1" // Indigo-500
+            radius={[6, 6, 0, 0]}
+          />
+          <Bar
+            dataKey="city2Value"
+            name={city2Name}
+            fill="#14B8A6" // Teal-500
+            radius={[6, 6, 0, 0]}
+          />
         </BarChart>
       </ResponsiveContainer>
     </Card>
