@@ -49,21 +49,27 @@ const Compare = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
       <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 shadow-lg">
           <div className="flex items-center space-x-4">
             <Link to="/">
-              <Button variant="ghost" className="p-2">
+              <Button variant="ghost" className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700">
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             </Link>
             <h1 className="text-2xl font-bold">
-              {city1Name} vs {city2Name}
+              <span className="text-primary hover:text-primary/80 dark:text-gray-200 dark:hover:text-purple-300 transition-colors">
+                {city1Name}
+              </span>
+              {" vs "}
+              <span className="text-secondary hover:text-secondary/80 dark:text-gray-200 dark:hover:text-teal-300 transition-colors">
+                {city2Name}
+              </span>
             </h1>
           </div>
           <Select value={language} onValueChange={(value) => setLanguage(value as 'fr' | 'en')}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] bg-white dark:bg-gray-700">
               <Globe className="w-4 h-4 mr-2" />
               <SelectValue placeholder={t("switchLanguage")} />
             </SelectTrigger>
@@ -74,29 +80,55 @@ const Compare = () => {
           </Select>
         </div>
 
-        <ComparisonChart
-          data={mockData}
-          city1Name={city1Name}
-          city2Name={city2Name}
-        />
+        <div className="grid gap-6">
+          <ComparisonChart
+            data={mockData}
+            city1Name={city1Name}
+            city2Name={city2Name}
+          />
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">{t("summary")}</h2>
-            <p className="text-gray-600">
-              {city1Name} {t(calculatePercentageDifference(2500, 1800) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
-            </p>
-          </Card>
+          <div className="grid md:grid-cols-2 gap-6">
+            <Card className="p-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                {t("summary")}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                {`${city1Name} ${t(calculatePercentageDifference(2500, 1800) > 0 ? "moreExpensive" : "lessExpensive")} ${city2Name} ${Math.abs(calculatePercentageDifference(2500, 1800))}%`}
+              </p>
+            </Card>
 
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-4">{t("insights")}</h2>
-            <ul className="space-y-2 text-gray-600">
-              <li>• {t("housingInsight")} {calculatePercentageDifference(2500, 1800)}% {t(calculatePercentageDifference(2500, 1800) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}</li>
-              <li>• {t("foodInsight")} {calculatePercentageDifference(400, 350)}% {t(calculatePercentageDifference(400, 350) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}</li>
-              <li>• {t("transportInsight")} {calculatePercentageDifference(150, 100)}% {t(calculatePercentageDifference(150, 100) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}</li>
-              <li>• {t("utilitiesInsight")} {calculatePercentageDifference(200, 150)}% {t(calculatePercentageDifference(200, 150) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}</li>
-            </ul>
-          </Card>
+            <Card className="p-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+                {t("insights")}
+              </h2>
+              <ul className="space-y-3 text-gray-600 dark:text-gray-300">
+                <li className="flex items-start space-x-2">
+                  <span className="inline-block w-2 h-2 mt-2 rounded-full bg-primary"></span>
+                  <span className="leading-relaxed">
+                    {t("housingInsight")} {Math.abs(calculatePercentageDifference(2500, 1800))}% {t(calculatePercentageDifference(2500, 1800) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
+                  </span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="inline-block w-2 h-2 mt-2 rounded-full bg-secondary"></span>
+                  <span className="leading-relaxed">
+                    {t("foodInsight")} {Math.abs(calculatePercentageDifference(400, 350))}% {t(calculatePercentageDifference(400, 350) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
+                  </span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="inline-block w-2 h-2 mt-2 rounded-full bg-accent"></span>
+                  <span className="leading-relaxed">
+                    {t("transportInsight")} {Math.abs(calculatePercentageDifference(150, 100))}% {t(calculatePercentageDifference(150, 100) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
+                  </span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <span className="inline-block w-2 h-2 mt-2 rounded-full bg-purple-400"></span>
+                  <span className="leading-relaxed">
+                    {t("utilitiesInsight")} {Math.abs(calculatePercentageDifference(200, 150))}% {t(calculatePercentageDifference(200, 150) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
+                  </span>
+                </li>
+              </ul>
+            </Card>
+          </div>
         </div>
       </div>
     </div>
