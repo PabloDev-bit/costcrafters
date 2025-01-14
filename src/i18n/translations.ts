@@ -1,5 +1,13 @@
 export const translations = {
   fr: {
+    appTitle: "Comparateur de Coûts",
+    selectFirstCity: "Sélectionnez la première ville",
+    selectSecondCity: "Sélectionnez la deuxième ville",
+    selected: "Sélectionné",
+    compareCities: "Comparer les villes",
+    selectLanguage: "Changer la langue",
+    selectCitiesError: "Erreur de sélection",
+    selectCitiesErrorDesc: "Veuillez sélectionner deux villes pour la comparaison",
     housing: "Logement",
     food: "Alimentation",
     transport: "Transport",
@@ -17,6 +25,14 @@ export const translations = {
     utilitiesInsight: "Les services publics sont",
   },
   en: {
+    appTitle: "Cost Comparison",
+    selectFirstCity: "Select First City",
+    selectSecondCity: "Select Second City",
+    selected: "Selected",
+    compareCities: "Compare Cities",
+    selectLanguage: "Change Language",
+    selectCitiesError: "Selection Error",
+    selectCitiesErrorDesc: "Please select two cities to compare",
     housing: "Housing",
     food: "Food",
     transport: "Transport",
