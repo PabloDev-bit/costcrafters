@@ -3,7 +3,7 @@ import { City as CityType } from "@/components/CitySelector";
 
 // Base URL et configuration de l'API GeoDB Cities pour la recherche de villes
 const GEODB_BASE_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
-const GEODB_API_KEY = import.meta.env.VITE_RAPIDAPI_KEY;
+const GEODB_API_KEY = "6a71d1cd46msh5a47d47e5ee55e4p1a90d3jsn3d3dfcc66fc4";
 
 const GEODB_HEADERS = {
   "X-RapidAPI-Key": GEODB_API_KEY,
@@ -19,29 +19,24 @@ const NUMBEO_HEADERS = {
   'X-RapidAPI-Host': 'cost-of-living-and-prices.p.rapidapi.com'
 };
 
-// Interface pour une ville
-interface City {
-  id: string;
-  name: string;
-  country: string;
-}
-
 /**
  * Recherche de villes par préfixe de nom via GeoDB Cities.
  */
-export async function fetchCitiesByName(searchTerm: string): Promise<City[]> {
+export async function fetchCitiesByName(searchTerm: string): Promise<CityType[]> {
   if (!searchTerm) return [];
 
   try {
     console.log('Fetching cities for search term:', searchTerm);
-    const url = `${GEODB_BASE_URL}/cities?namePrefix=${encodeURIComponent(searchTerm)}&limit=10`;
+    const url = `${GEODB_BASE_URL}/cities?namePrefix=${encodeURIComponent(searchTerm)}&limit=10&sort=-population`;
+    
+    console.log('Request headers:', GEODB_HEADERS);
     const response = await axios.get(url, { headers: GEODB_HEADERS });
     console.log('Cities API response:', response.data);
 
     return response.data.data.map((city: any) => ({
-      id: city.id,
-      name: city.name,
-      country: city.country,
+      id: city.id.toString(),
+      name: city.city,
+      country: city.countryCode,
     }));
   } catch (error) {
     console.error('Error fetching cities:', error);
