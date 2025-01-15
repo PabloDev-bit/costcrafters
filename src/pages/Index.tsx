@@ -40,18 +40,19 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-background transition-colors duration-300 ${
-      theme === 'dark' ? 'bg-gradient-to-br from-gray-900 to-gray-800' : 
-      'bg-gradient-to-br from-purple-50 to-teal-50'
-    }`}>
-      <div className="max-w-4xl mx-auto p-4 space-y-8 animate-fade-in">
-        <div className="flex justify-between items-center">
-          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-500">
+      <div className="max-w-4xl mx-auto p-6 space-y-8 animate-fade-in">
+        {/* Header */}
+        <header className="flex flex-col sm:flex-row justify-between items-center gap-4 backdrop-blur-sm bg-white/30 dark:bg-gray-800/30 p-4 rounded-xl border border-gray-200/50 dark:border-gray-700/50">
+          <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent">
             {t("appTitle")}
           </h1>
           <div className="flex items-center gap-4">
-            <Select value={language} onValueChange={(value) => setLanguage(value as 'fr' | 'en')}>
-              <SelectTrigger className="w-[140px]">
+            <Select
+              value={language}
+              onValueChange={(value) => setLanguage(value as "fr" | "en")}
+            >
+              <SelectTrigger className="w-[140px] bg-white/80 dark:bg-gray-800/80">
                 <Globe className="w-4 h-4 mr-2" />
                 <SelectValue placeholder={t("selectLanguage")} />
               </SelectTrigger>
@@ -64,47 +65,58 @@ const Index = () => {
               variant="outline"
               size="icon"
               onClick={toggleTheme}
-              className="rounded-full"
+              className="rounded-full bg-white/80 dark:bg-gray-800/80 hover:shadow-lg transition-all duration-300"
             >
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+              {theme === "dark" ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
             </Button>
           </div>
-        </div>
+        </header>
 
+        {/* City Selection */}
         <div className="grid md:grid-cols-2 gap-8">
-          <div className="space-y-4 bg-card p-6 rounded-xl shadow-lg animate-slide-up">
+          <div className="space-y-4 backdrop-blur-sm bg-white/30 dark:bg-gray-800/30 p-6 rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg animate-slide-up">
             <CitySelector
               label={t("selectFirstCity")}
               onCitySelect={(city) => setCity1(city)}
             />
             {city1 && (
-              <p className="text-sm text-primary font-medium">
+              <p className="text-sm font-medium text-primary dark:text-primary-foreground">
                 {t("selected")}: {city1.name}, {city1.country}
               </p>
             )}
           </div>
 
-          <div className="space-y-4 bg-card p-6 rounded-xl shadow-lg animate-slide-up delay-100">
+          <div className="space-y-4 backdrop-blur-sm bg-white/30 dark:bg-gray-800/30 p-6 rounded-xl border border-gray-200/50 dark:border-gray-700/50 shadow-lg animate-slide-up delay-100">
             <CitySelector
               label={t("selectSecondCity")}
               onCitySelect={(city) => setCity2(city)}
             />
             {city2 && (
-              <p className="text-sm text-primary font-medium">
+              <p className="text-sm font-medium text-primary dark:text-primary-foreground">
                 {t("selected")}: {city2.name}, {city2.country}
               </p>
             )}
           </div>
         </div>
 
-        <div className="flex justify-center">
+        {/* Compare Button */}
+        <div className="flex justify-center pt-8">
           <Button
             onClick={handleCompare}
-            className="px-8 py-6 text-lg rounded-full bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-all duration-300 transform hover:scale-105"
+            className="px-8 py-6 text-lg rounded-full bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
           >
             {t("compareCities")}
           </Button>
         </div>
+
+        {/* Footer */}
+        <footer className="mt-16 text-center text-sm text-gray-500 dark:text-gray-400">
+          <p>© 2024 Cost of Living Comparison. All rights reserved.</p>
+        </footer>
       </div>
     </div>
   );

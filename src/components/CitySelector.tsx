@@ -7,7 +7,7 @@ export interface City {
   id: string;
   name: string;
   country: string;
-  flagUrl?: string; // Nouveau champ
+  flagUrl?: string;
 }
 
 interface CitySelectorProps {
@@ -18,7 +18,6 @@ interface CitySelectorProps {
 export const CitySelector = ({ onCitySelect, label }: CitySelectorProps) => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Exemple amélioré de data avec URL de drapeau (ou n’importe quelle image)
   const cities: City[] = [
     {
       id: "1",
@@ -58,49 +57,46 @@ export const CitySelector = ({ onCitySelect, label }: CitySelectorProps) => {
 
   return (
     <div className="w-full space-y-4">
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+      <label className="block text-lg font-semibold text-gray-700 dark:text-gray-200">
         {label}
       </label>
 
-      {/* Zone de recherche */}
-      <div className="relative">
-        <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+      <div className="relative transform transition-all duration-300 hover:scale-[1.02]">
+        <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
         <Input
           type="text"
           placeholder="Search cities..."
-          className="pl-10"
+          className="pl-10 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-primary/50 transition-all duration-300"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
-      {/* Liste de résultats */}
-      <div className="space-y-2">
+      <div className="space-y-2 animate-fade-in">
         {filteredCities.length === 0 ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
             No results found.
           </p>
         ) : (
           filteredCities.map((city) => (
             <Card
               key={city.id}
-              className="p-4 cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md dark:hover:bg-gray-800 group"
+              className="p-4 cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg dark:hover:shadow-primary/5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 group"
               onClick={() => onCitySelect(city)}
             >
               <div className="flex justify-start items-center gap-4">
-                {/* Ajout d’une image (drapeau) */}
                 {city.flagUrl && (
                   <img
                     src={city.flagUrl}
                     alt={`${city.name} flag`}
-                    className="w-6 h-6 object-contain"
+                    className="w-6 h-6 object-contain rounded-sm shadow-sm"
                   />
                 )}
                 <div>
-                  <h3 className="font-medium group-hover:text-gray-900 dark:group-hover:text-gray-100 transition-colors">
+                  <h3 className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-primary transition-colors">
                     {city.name}
                   </h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">
                     {city.country}
                   </p>
                 </div>
