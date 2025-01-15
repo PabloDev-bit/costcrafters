@@ -26,11 +26,19 @@ const Home = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-500">
+    <div className="relative min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 transition-all duration-700 overflow-hidden">
+      {/* Déco en background */}
+      <div className="absolute inset-0 pointer-events-none z-[-1] before:absolute before:inset-0 before:bg-gradient-to-b before:from-primary/20 before:to-accent/20 before:blur-3xl" />
+
       {/* Hero Section */}
-      <section className="pt-20 pb-16 px-4">
-        <div className="max-w-4xl mx-auto text-center space-y-6 animate-fade-in">
-          <h1 className="text-4xl md:text-6xl font-bold gradient-text">
+      <section className="relative pt-20 pb-16 px-4 overflow-hidden">
+        {/* Petites particules animées */}
+        <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-50 select-none">
+          {/* ex: un composant décoratif, ou un set d’images/paricles */}
+        </div>
+
+        <div className="max-w-4xl mx-auto text-center space-y-6 animate-fade-in-up">
+          <h1 className="text-4xl md:text-6xl font-extrabold gradient-text tracking-tight drop-shadow-sm animate-float">
             Bienvenue sur CostCrafters
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300">
@@ -38,7 +46,9 @@ const Home = () => {
           </p>
           <Button
             onClick={() => navigate("/compare")}
-            className="px-8 py-6 text-lg rounded-full bg-gradient-to-r from-primary via-secondary to-accent hover:opacity-90 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+            className="px-8 py-6 text-lg rounded-full bg-gradient-to-r from-primary via-secondary to-accent
+                       hover:rotate-1 hover:scale-105 hover:opacity-95
+                       transition-transform duration-300 hover:shadow-2xl"
           >
             Commencer la comparaison
           </Button>
@@ -48,24 +58,25 @@ const Home = () => {
       {/* Features Section */}
       <section className="py-16 px-4 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 gradient-text">
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 gradient-text animate-fade-in">
             Fonctionnalités Principales
           </h2>
+
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="p-6 rounded-xl bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 animate-fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
+                className="p-6 rounded-xl bg-white/50 dark:bg-gray-700/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-600/50
+                           shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2
+                           animate-slide-up"
+                style={{ animationDelay: `${index * 200}ms` }}
               >
                 <div className="flex flex-col items-center text-center space-y-4">
-                  <div className="p-3 rounded-full bg-gray-100 dark:bg-gray-800">
+                  <div className="p-3 rounded-full bg-gray-100 dark:bg-gray-800 shadow-md">
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-semibold">{feature.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-300">
-                    {feature.description}
-                  </p>
+                  <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
                 </div>
               </div>
             ))}
@@ -75,8 +86,8 @@ const Home = () => {
 
       {/* Footer */}
       <footer className="py-8 px-4 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="flex justify-center space-x-6 mb-4">
+        <div className="max-w-4xl mx-auto text-center space-y-4">
+          <div className="flex justify-center space-x-6 mb-2">
             <a
               href="#"
               className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
