@@ -1,7 +1,6 @@
 /**
  * Interface décrivant la structure attendue pour chaque langue.
- * Chaque clé (appTitle, selectFirstCity, ...) doit exister dans toutes les traductions
- * pour éviter des incohérences.
+ * Toutes les clés sont requises pour éviter des incohérences.
  */
 interface BaseTranslation {
   appTitle: string;
@@ -27,12 +26,15 @@ interface BaseTranslation {
   foodInsight: string;
   transportInsight: string;
   utilitiesInsight: string;
+
+  // AJOUT de nouvelles clés :
+  errorFetchingData: string;
+  tryAgain: string;
+  loading: string; // <-- la clé manquante qui cause l'erreur
 }
 
 /**
- * Définition des traductions disponibles :
- * - 'fr' pour le français
- * - 'en' pour l'anglais
+ * On définit ici nos traductions 'fr' et 'en'
  */
 export const translations = {
   fr: {
@@ -60,6 +62,11 @@ export const translations = {
     foodInsight: "L’alimentation est",
     transportInsight: "Le transport est",
     utilitiesInsight: "Les services publics sont",
+
+    // Nouvelles clés
+    errorFetchingData: "Erreur lors de la récupération des données",
+    tryAgain: "Réessayer",
+    loading: "Chargement...", // <-- ajout
   },
   en: {
     appTitle: "Cost Comparison – Explore & Compare!",
@@ -86,9 +93,21 @@ export const translations = {
     foodInsight: "Food is",
     transportInsight: "Transportation is",
     utilitiesInsight: "Utilities are",
-  },
-};
 
-// Types utiles pour éviter les fautes de frappe lors de l'utilisation :
+    // Nouvelles clés
+    errorFetchingData: "Error fetching data",
+    tryAgain: "Try again",
+    loading: "Loading...", // <-- ajout
+  },
+} satisfies Record<string, BaseTranslation>;
+
+/**
+ * On déduit le type des langues ('fr' | 'en').
+ */
 export type Language = keyof typeof translations;
+
+/**
+ * On déduit aussi le type des clés de traduction
+ * (ex: "appTitle", "selectFirstCity", "loading", etc.)
+ */
 export type TranslationKey = keyof typeof translations.en;

@@ -36,7 +36,8 @@ const Index = () => {
       });
       return;
     }
-    navigate(`/compare/${city1.id}/${city2.id}`);
+    // Au lieu de city1.id / city2.id, on passe city1.name / city2.name
+    navigate(`/compare/${encodeURIComponent(city1.name)}/${encodeURIComponent(city2.name)}`);
   };
 
   return (
