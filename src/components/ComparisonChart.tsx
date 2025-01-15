@@ -25,17 +25,12 @@ export const ComparisonChart = ({
   city2Name,
 }: ComparisonChartProps) => {
   return (
-    <Card className="p-6 w-full h-[400px]">
-      <h3 className="text-lg font-semibold mb-4">Cost Comparison</h3>
+    <Card className="p-6 w-full h-[400px] transition-transform hover:scale-[1.01] hover:shadow-xl">
+      <h3 className="text-lg font-semibold mb-4 text-primary">Cost Comparison</h3>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
+          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           barCategoryGap="20%"
           barGap={8}
         >

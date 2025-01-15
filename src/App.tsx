@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
@@ -16,8 +16,10 @@ const App = () => (
     <LanguageProvider>
       <ThemeProvider>
         <TooltipProvider>
+          {/* Toast providers */}
           <Toaster />
           <Sonner />
+          {/* Router */}
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Home />} />

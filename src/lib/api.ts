@@ -1,10 +1,18 @@
-import axios from 'axios';
+import axios from "axios";
 import { City as CityType } from "@/components/CitySelector";
 
-// Base URL et configuration de l'API GeoDB Cities pour la recherche de villes
+// Lis la clé d’API depuis la config Vite
+const GEODB_API_KEY = import.meta.env.VITE_GEODB_API_KEY || "";
 const GEODB_BASE_URL = "https://wft-geo-db.p.rapidapi.com/v1/geo";
-const GEODB_API_KEY = "6a71d1cd46msh5a47d47e5ee55e4p1a90d3jsn3d3dfcc66fc4";
 
+// On vérifie au cas où
+if (!GEODB_API_KEY) {
+  console.warn(
+    "⚠️  GEODB_API_KEY is missing. Make sure you have set it in your .env file."
+  );
+}
+
+// Headers pour GeoDB Cities
 const GEODB_HEADERS = {
   "X-RapidAPI-Key": GEODB_API_KEY,
   "X-RapidAPI-Host": "wft-geo-db.p.rapidapi.com",
@@ -12,39 +20,31 @@ const GEODB_HEADERS = {
 
 // Configuration de l'API Numbeo
 const NUMBEO_BASE_URL = "https://cost-of-living-and-prices.p.rapidapi.com/prices";
-const NUMBEO_API_KEY = GEODB_API_KEY; // Utilise la même clé RapidAPI
-
 const NUMBEO_HEADERS = {
-  'X-RapidAPI-Key': NUMBEO_API_KEY,
-  'X-RapidAPI-Host': 'cost-of-living-and-prices.p.rapidapi.com'
+  "X-RapidAPI-Key": GEODB_API_KEY,
+  "X-RapidAPI-Host": "cost-of-living-and-prices.p.rapidapi.com",
 };
 
-/**
- * Recherche de villes par préfixe de nom via GeoDB Cities.
- */
 export async function fetchCitiesByName(searchTerm: string): Promise<CityType[]> {
   if (!searchTerm) return [];
 
   try {
-    console.log('Fetching cities for search term:', searchTerm);
-    const url = `${GEODB_BASE_URL}/cities?namePrefix=${encodeURIComponent(searchTerm)}&limit=10&sort=-population`;
-    
-    console.log('Request headers:', GEODB_HEADERS);
-    const response = await axios.get(url, { headers: GEODB_HEADERS });
-    console.log('Cities API response:', response.data);
+    const url = `${GEODB_BASE_URL}/cities?namePrefix=${encodeURIComponent(
+      searchTerm
+    )}&limit=10&sort=-population`;
 
+    const response = await axios.get(url, { headers: GEODB_HEADERS });
     return response.data.data.map((city: any) => ({
       id: city.id.toString(),
       name: city.city,
       country: city.countryCode,
     }));
   } catch (error) {
-    console.error('Error fetching cities:', error);
-    throw new Error('Failed to fetch cities');
+    console.error("Error fetching cities:", error);
+    throw new Error("Failed to fetch cities");
   }
 }
 
-// Interface pour les coûts de la vie
 export interface CostOfLivingData {
   cityName: string;
   housing: number;
@@ -53,40 +53,26 @@ export interface CostOfLivingData {
   utilities: number;
 }
 
-/**
- * Récupère les coûts de la vie pour une ville spécifique via l'API Numbeo.
- */
 export async function fetchCostOfLivingData(cityName: string): Promise<CostOfLivingData> {
   try {
-    console.log('Fetching cost of living data for city:', cityName);
-    const response = await axios.get(`${NUMBEO_BASE_URL}`, {
+    const response = await axios.get(NUMBEO_BASE_URL, {
       headers: NUMBEO_HEADERS,
-      params: {
-        city_name: cityName,
-      }
+      params: { city_name: cityName },
     });
-    console.log('Cost of living API response:', response.data);
 
-    // Traitement des données de l'API Numbeo
     const data = response.data;
     const prices = data.prices || [];
 
     // Calcul des moyennes par catégorie
-    const housing = calculateAverageForCategory(prices, ['Rent', 'Apartment', 'House']);
-    const food = calculateAverageForCategory(prices, ['Meal', 'Food', 'Grocery']);
-    const transport = calculateAverageForCategory(prices, ['Transportation', 'Taxi', 'Bus']);
-    const utilities = calculateAverageForCategory(prices, ['Utilities', 'Internet', 'Mobile']);
+    const housing = calculateAverageForCategory(prices, ["Rent", "Apartment", "House"]);
+    const food = calculateAverageForCategory(prices, ["Meal", "Food", "Grocery"]);
+    const transport = calculateAverageForCategory(prices, ["Transportation", "Taxi", "Bus"]);
+    const utilities = calculateAverageForCategory(prices, ["Utilities", "Internet", "Mobile"]);
 
-    return {
-      cityName,
-      housing,
-      food,
-      transport,
-      utilities,
-    };
+    return { cityName, housing, food, transport, utilities };
   } catch (error) {
-    console.error('Error fetching cost of living data:', error);
-    // En cas d'erreur, retourner des données simulées
+    // On log l’erreur et on fournit des données simulées
+    console.error("Error fetching cost of living data:", error);
     return {
       cityName,
       housing: generateRandomCost(1000, 2000),
@@ -97,11 +83,10 @@ export async function fetchCostOfLivingData(cityName: string): Promise<CostOfLiv
   }
 }
 
-// Fonction utilitaire pour calculer la moyenne des coûts par catégorie
 function calculateAverageForCategory(prices: any[], keywords: string[]): number {
   const relevantPrices = prices.filter((price: any) =>
-    keywords.some(keyword => 
-      price.item_name.toLowerCase().includes(keyword.toLowerCase())
+    keywords.some((keyword) =>
+      price.item_name?.toLowerCase().includes(keyword.toLowerCase())
     )
   );
 
@@ -109,14 +94,13 @@ function calculateAverageForCategory(prices: any[], keywords: string[]): number 
     return generateRandomCost(100, 1000);
   }
 
-  const sum = relevantPrices.reduce((acc: number, price: any) => 
-    acc + parseFloat(price.avg_price || 0), 0
+  const sum = relevantPrices.reduce(
+    (acc: number, price: any) => acc + parseFloat(price.avg_price || 0),
+    0
   );
-  
   return Math.round(sum / relevantPrices.length);
 }
 
-// Fonction utilitaire pour générer un coût aléatoire
 function generateRandomCost(min: number, max: number): number {
   return Math.round(Math.random() * (max - min) + min);
 }

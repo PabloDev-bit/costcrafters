@@ -2,6 +2,7 @@ import { Search } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast"; // Pour afficher des erreurs éventuelles
 import { fetchCitiesByName } from "@/lib/api";
 
 export interface City {
@@ -22,30 +23,38 @@ export const CitySelector = ({ onCitySelect, label }: CitySelectorProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const searchCities = async () => {
-      if (searchTerm.length < 2) {
-        setCities([]);
-        return;
-      }
+    if (searchTerm.length < 2) {
+      setCities([]);
+      return;
+    }
 
+    const searchCities = async () => {
       setIsLoading(true);
       try {
         const fetchedCities = await fetchCitiesByName(searchTerm);
-        // Ajouter les URLs des drapeaux aux villes
-        const citiesWithFlags = fetchedCities.map(city => ({
+        // Génère aussi une URL de drapeau (optionnel)
+        const citiesWithFlags = fetchedCities.map((city) => ({
           ...city,
           flagUrl: `https://flagcdn.com/${city.country.toLowerCase()}.svg`,
         }));
         setCities(citiesWithFlags);
-      } catch (error) {
-        console.error("Error fetching cities:", error);
+      } catch (error: any) {
+        toast({
+          title: "Error fetching cities",
+          description: error?.message || "Unknown error",
+          variant: "destructive",
+        });
         setCities([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    const debounceTimer = setTimeout(searchCities, 300);
+    // Légère temporisation pour éviter de surcharger l’API
+    const debounceTimer = setTimeout(() => {
+      searchCities();
+    }, 350);
+
     return () => clearTimeout(debounceTimer);
   }, [searchTerm]);
 
@@ -55,7 +64,7 @@ export const CitySelector = ({ onCitySelect, label }: CitySelectorProps) => {
         {label}
       </label>
 
-      <div className="relative transform transition-all duration-300 hover:scale-[1.02]">
+      <div className="relative transition-all duration-300 hover:scale-[1.02]">
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400 dark:text-gray-500" />
         <Input
           type="text"
@@ -73,7 +82,9 @@ export const CitySelector = ({ onCitySelect, label }: CitySelectorProps) => {
           </p>
         ) : cities.length === 0 ? (
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
-            {searchTerm.length < 2 ? "Enter at least 2 characters" : "No results found."}
+            {searchTerm.length < 2
+              ? "Enter at least 2 characters"
+              : "No results found."}
           </p>
         ) : (
           cities.map((city) => (
@@ -82,7 +93,7 @@ export const CitySelector = ({ onCitySelect, label }: CitySelectorProps) => {
               className="p-4 cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg dark:hover:shadow-primary/5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 group"
               onClick={() => onCitySelect(city)}
             >
-              <div className="flex justify-start items-center gap-4">
+              <div className="flex items-center gap-4">
                 {city.flagUrl && (
                   <img
                     src={city.flagUrl}

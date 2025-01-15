@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Globe, ChartBar, Calendar, DollarSign } from "lucide-react";
+import { Globe, ChartBar, Calendar } from "lucide-react";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -11,18 +11,18 @@ const Home = () => {
     {
       icon: <Globe className="w-12 h-12 text-primary" />,
       title: "Comparaison Mondiale",
-      description: "Comparez le coût de la vie dans différentes villes du monde entier"
+      description: "Comparez le coût de la vie dans différentes villes du monde entier",
     },
     {
       icon: <ChartBar className="w-12 h-12 text-secondary" />,
       title: "Visualisation Interactive",
-      description: "Analysez les données avec des graphiques interactifs détaillés"
+      description: "Analysez les données avec des graphiques interactifs détaillés",
     },
     {
       icon: <Calendar className="w-12 h-12 text-accent" />,
       title: "Projections sur 5 ans",
-      description: "Planifiez votre avenir avec nos projections sur 5 ans"
-    }
+      description: "Planifiez votre avenir avec nos projections sur 5 ans",
+    },
   ];
 
   return (
@@ -77,10 +77,16 @@ const Home = () => {
       <footer className="py-8 px-4 bg-white/30 dark:bg-gray-800/30 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto text-center">
           <div className="flex justify-center space-x-6 mb-4">
-            <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+            <a
+              href="#"
+              className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+            >
               Politique de confidentialité
             </a>
-            <a href="#" className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors">
+            <a
+              href="#"
+              className="text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
+            >
               Nous contacter
             </a>
           </div>

@@ -16,31 +16,15 @@ const Compare = () => {
   const { city1Id, city2Id } = useParams();
   const { t, language, setLanguage } = useLanguage();
 
-  // Mock data - in a real app this would come from an API
+  // === Simulation de data => en vrai, tu récupères depuis l'API ===
   const mockData = [
-    {
-      category: t("housing"),
-      city1Value: 2500,
-      city2Value: 1800,
-    },
-    {
-      category: t("food"),
-      city1Value: 400,
-      city2Value: 350,
-    },
-    {
-      category: t("transport"),
-      city1Value: 150,
-      city2Value: 100,
-    },
-    {
-      category: t("utilities"),
-      city1Value: 200,
-      city2Value: 150,
-    },
+    { category: t("housing"), city1Value: 2500, city2Value: 1800 },
+    { category: t("food"), city1Value: 400, city2Value: 350 },
+    { category: t("transport"), city1Value: 150, city2Value: 100 },
+    { category: t("utilities"), city1Value: 200, city2Value: 150 },
   ];
 
-  // Mock city names - in a real app these would be fetched based on IDs
+  // On suppose city1Name et city2Name – en pratique, on utiliserait city1Id/city2Id
   const city1Name = "Paris";
   const city2Name = "Tokyo";
 
@@ -68,7 +52,7 @@ const Compare = () => {
               </span>
             </h1>
           </div>
-          <Select value={language} onValueChange={(value) => setLanguage(value as 'fr' | 'en')}>
+          <Select value={language} onValueChange={(value) => setLanguage(value as "fr" | "en")}>
             <SelectTrigger className="w-[180px] bg-white dark:bg-gray-700">
               <Globe className="w-4 h-4 mr-2" />
               <SelectValue placeholder={t("switchLanguage")} />
@@ -93,7 +77,9 @@ const Compare = () => {
                 {t("summary")}
               </h2>
               <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                {`${city1Name} ${t(calculatePercentageDifference(2500, 1800) > 0 ? "moreExpensive" : "lessExpensive")} ${city2Name} ${Math.abs(calculatePercentageDifference(2500, 1800))}%`}
+                {`${city1Name} ${
+                  t(calculatePercentageDifference(2500, 1800) > 0 ? "moreExpensive" : "lessExpensive")
+                } ${city2Name} ${Math.abs(calculatePercentageDifference(2500, 1800))}%`}
               </p>
             </Card>
 
@@ -105,25 +91,37 @@ const Compare = () => {
                 <li className="flex items-start space-x-2">
                   <span className="inline-block w-2 h-2 mt-2 rounded-full bg-primary"></span>
                   <span className="leading-relaxed">
-                    {t("housingInsight")} {Math.abs(calculatePercentageDifference(2500, 1800))}% {t(calculatePercentageDifference(2500, 1800) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
+                    {t("housingInsight")}{" "}
+                    {Math.abs(calculatePercentageDifference(2500, 1800))}%{" "}
+                    {t(calculatePercentageDifference(2500, 1800) > 0 ? "moreExpensive" : "lessExpensive")}{" "}
+                    {city2Name}
                   </span>
                 </li>
                 <li className="flex items-start space-x-2">
                   <span className="inline-block w-2 h-2 mt-2 rounded-full bg-secondary"></span>
                   <span className="leading-relaxed">
-                    {t("foodInsight")} {Math.abs(calculatePercentageDifference(400, 350))}% {t(calculatePercentageDifference(400, 350) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
+                    {t("foodInsight")}{" "}
+                    {Math.abs(calculatePercentageDifference(400, 350))}%{" "}
+                    {t(calculatePercentageDifference(400, 350) > 0 ? "moreExpensive" : "lessExpensive")}{" "}
+                    {city2Name}
                   </span>
                 </li>
                 <li className="flex items-start space-x-2">
                   <span className="inline-block w-2 h-2 mt-2 rounded-full bg-accent"></span>
                   <span className="leading-relaxed">
-                    {t("transportInsight")} {Math.abs(calculatePercentageDifference(150, 100))}% {t(calculatePercentageDifference(150, 100) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
+                    {t("transportInsight")}{" "}
+                    {Math.abs(calculatePercentageDifference(150, 100))}%{" "}
+                    {t(calculatePercentageDifference(150, 100) > 0 ? "moreExpensive" : "lessExpensive")}{" "}
+                    {city2Name}
                   </span>
                 </li>
                 <li className="flex items-start space-x-2">
                   <span className="inline-block w-2 h-2 mt-2 rounded-full bg-purple-400"></span>
                   <span className="leading-relaxed">
-                    {t("utilitiesInsight")} {Math.abs(calculatePercentageDifference(200, 150))}% {t(calculatePercentageDifference(200, 150) > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
+                    {t("utilitiesInsight")}{" "}
+                    {Math.abs(calculatePercentageDifference(200, 150))}%{" "}
+                    {t(calculatePercentageDifference(200, 150) > 0 ? "moreExpensive" : "lessExpensive")}{" "}
+                    {city2Name}
                   </span>
                 </li>
               </ul>
