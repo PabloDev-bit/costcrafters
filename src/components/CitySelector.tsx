@@ -1,7 +1,8 @@
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { fetchCitiesByName } from "@/lib/api";
 
 export interface City {
   id: string;
@@ -17,43 +18,36 @@ interface CitySelectorProps {
 
 export const CitySelector = ({ onCitySelect, label }: CitySelectorProps) => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [cities, setCities] = useState<City[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const cities: City[] = [
-    {
-      id: "1",
-      name: "New York",
-      country: "USA",
-      flagUrl: "https://flagcdn.com/us.svg",
-    },
-    {
-      id: "2",
-      name: "London",
-      country: "UK",
-      flagUrl: "https://flagcdn.com/gb.svg",
-    },
-    {
-      id: "3",
-      name: "Paris",
-      country: "France",
-      flagUrl: "https://flagcdn.com/fr.svg",
-    },
-    {
-      id: "4",
-      name: "Tokyo",
-      country: "Japan",
-      flagUrl: "https://flagcdn.com/jp.svg",
-    },
-    {
-      id: "5",
-      name: "Sydney",
-      country: "Australia",
-      flagUrl: "https://flagcdn.com/au.svg",
-    },
-  ];
+  useEffect(() => {
+    const searchCities = async () => {
+      if (searchTerm.length < 2) {
+        setCities([]);
+        return;
+      }
 
-  const filteredCities = cities.filter((city) =>
-    city.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+      setIsLoading(true);
+      try {
+        const fetchedCities = await fetchCitiesByName(searchTerm);
+        // Ajouter les URLs des drapeaux aux villes
+        const citiesWithFlags = fetchedCities.map(city => ({
+          ...city,
+          flagUrl: `https://flagcdn.com/${city.country.toLowerCase()}.svg`,
+        }));
+        setCities(citiesWithFlags);
+      } catch (error) {
+        console.error("Error fetching cities:", error);
+        setCities([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchCities, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [searchTerm]);
 
   return (
     <div className="w-full space-y-4">
@@ -73,12 +67,16 @@ export const CitySelector = ({ onCitySelect, label }: CitySelectorProps) => {
       </div>
 
       <div className="space-y-2 animate-fade-in">
-        {filteredCities.length === 0 ? (
+        {isLoading ? (
           <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
-            No results found.
+            Loading...
+          </p>
+        ) : cities.length === 0 ? (
+          <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+            {searchTerm.length < 2 ? "Enter at least 2 characters" : "No results found."}
           </p>
         ) : (
-          filteredCities.map((city) => (
+          cities.map((city) => (
             <Card
               key={city.id}
               className="p-4 cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg dark:hover:shadow-primary/5 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-gray-200 dark:border-gray-700 group"
