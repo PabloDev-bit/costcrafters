@@ -21,9 +21,11 @@ const InteractiveMap = ({ cities, onCityClick }: InteractiveMapProps) => {
   useEffect(() => {
     if (!mapContainer.current) return;
 
-    // Initialize map
-    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN'; // Remplacer par votre token Mapbox
+    // Initialize map with the provided token
+    mapboxgl.accessToken = 'pk.eyJ1IjoicGFibGl0bzM1NTQwIiwiYSI6ImNtNGRkcm5pNjBrbTkycG9uaWFybTFhMzMifQ.G92iGrmTul-F96VMmdrQAw';
     
+    console.log('Initializing Mapbox map...');
+
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
       style: 'mapbox://styles/mapbox/light-v11',
@@ -41,6 +43,8 @@ const InteractiveMap = ({ cities, onCityClick }: InteractiveMapProps) => {
       'top-right'
     );
 
+    console.log('Adding markers for cities:', cities);
+
     // Add markers for each city
     cities.forEach((city) => {
       const marker = new mapboxgl.Marker({
@@ -56,6 +60,7 @@ const InteractiveMap = ({ cities, onCityClick }: InteractiveMapProps) => {
     });
 
     return () => {
+      console.log('Cleaning up Mapbox map...');
       map.current?.remove();
     };
   }, [cities]);
@@ -68,7 +73,10 @@ const InteractiveMap = ({ cities, onCityClick }: InteractiveMapProps) => {
     </div>`;
     el.addEventListener('click', () => {
       const city = cities.find(c => c.name === cityName);
-      if (city) onCityClick(city);
+      if (city) {
+        console.log('City marker clicked:', city);
+        onCityClick(city);
+      }
     });
     return el;
   };
