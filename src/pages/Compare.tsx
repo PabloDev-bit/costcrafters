@@ -1,7 +1,10 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Globe } from "lucide-react";
+import { ArrowLeft, Globe, ExternalLink } from "lucide-react";
 import { ComparisonChart } from "@/components/ComparisonChart";
+import InteractiveMap from "@/components/InteractiveMap";
+import SimilarCities from "@/components/SimilarCities";
+import FAQ from "@/components/FAQ";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -15,7 +18,6 @@ import {
 import { fetchCostOfLivingData, CostOfLivingData } from "@/lib/api";
 
 const Compare = () => {
-  // city1Id, city2Id seront en fait des noms (ex. "Paris", "New York")
   const { city1Id, city2Id } = useParams();
   const { t, language, setLanguage } = useLanguage();
 
@@ -48,7 +50,40 @@ const Compare = () => {
       });
   }, [city1Id, city2Id]);
 
-  // Loading
+  const [selectedCities, setSelectedCities] = useState<{
+    coordinates: [number, number][];
+    names: string[];
+  }>({
+    coordinates: [],
+    names: [],
+  });
+
+  const similarCities = [
+    {
+      name: "Ville Similaire 1",
+      country: "Pays 1",
+      similarityScore: 85,
+      costOfLiving: 95,
+    },
+    {
+      name: "Ville Similaire 2",
+      country: "Pays 2",
+      similarityScore: 80,
+      costOfLiving: 90,
+    },
+  ];
+
+  const externalResources = [
+    {
+      title: "Guide de voyage pour Paris",
+      url: "https://example.com/paris-guide",
+    },
+    {
+      title: "Blog sur le coût de la vie à Londres",
+      url: "https://example.com/london-cost",
+    },
+  ];
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -57,7 +92,6 @@ const Compare = () => {
     );
   }
 
-  // Si data manquante => Erreur
   if (!city1Data || !city2Data) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
@@ -75,11 +109,9 @@ const Compare = () => {
     );
   }
 
-  // city1Name & city2Name => ex: "Paris", "New York"
   const city1Name = city1Data.cityName;
   const city2Name = city2Data.cityName;
 
-  // Préparation du data pour BarChart
   const chartData = [
     {
       category: t("housing"),
@@ -103,7 +135,6 @@ const Compare = () => {
     },
   ];
 
-  // Ex pour summary => difference sur le logement
   const diffHousing = calculatePercentageDifference(
     city1Data.housing,
     city2Data.housing
@@ -111,8 +142,7 @@ const Compare = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
-      <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
-        {/* Header */}
+      <div className="max-w-7xl mx-auto space-y-8 animate-fade-in">
         <div className="flex items-center justify-between bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-4 shadow-lg">
           <div className="flex items-center space-x-4">
             <Link to="/">
@@ -142,7 +172,25 @@ const Compare = () => {
           </Select>
         </div>
 
-        {/* Chart */}
+        <Card className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Carte Interactive</h2>
+          <InteractiveMap
+            cities={[
+              {
+                name: city1Name,
+                country: "Country 1",
+                coordinates: [2.3522, 48.8566],
+              },
+              {
+                name: city2Name,
+                country: "Country 2",
+                coordinates: [-0.1276, 51.5074],
+              },
+            ]}
+            onCityClick={(city) => console.log("Ville sélectionnée:", city)}
+          />
+        </Card>
+
         <div className="grid gap-6">
           <ComparisonChart
             data={chartData}
@@ -151,7 +199,6 @@ const Compare = () => {
           />
 
           <div className="grid md:grid-cols-2 gap-6">
-            {/* SUMMARY */}
             <Card className="p-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow">
               <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
                 {t("summary")}
@@ -163,7 +210,6 @@ const Compare = () => {
               </p>
             </Card>
 
-            {/* INSIGHTS */}
             <Card className="p-6 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm shadow-lg hover:shadow-xl transition-shadow">
               <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
                 {t("insights")}
@@ -181,6 +227,37 @@ const Compare = () => {
             </Card>
           </div>
         </div>
+
+        <Card className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Villes Similaires</h2>
+          <SimilarCities
+            cities={similarCities}
+            onCitySelect={(city) => console.log("Ville similaire sélectionnée:", city)}
+          />
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Ressources Externes</h2>
+          <div className="grid gap-4">
+            {externalResources.map((resource, index) => (
+              <a
+                key={index}
+                href={resource.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+              >
+                <ExternalLink className="h-4 w-4" />
+                {resource.title}
+              </a>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="p-6">
+          <h2 className="text-2xl font-bold mb-4">Questions Fréquentes</h2>
+          <FAQ />
+        </Card>
       </div>
     </div>
   );
