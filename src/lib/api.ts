@@ -69,9 +69,6 @@ const handleApiError = (error: AxiosError, context: string) => {
   throw error;
 };
 
-/**
- * Recherche de villes par préfixe de nom via GeoDB Cities.
- */
 export async function fetchCitiesByName(searchTerm: string): Promise<CityType[]> {
   if (!searchTerm) return [];
 
@@ -82,9 +79,9 @@ export async function fetchCitiesByName(searchTerm: string): Promise<CityType[]>
     )}&limit=10&sort=-population`;
 
     const startTime = performance.now();
-    const response = await axios.get(url, { 
+    const response = await axios.get(url, {
       headers: GEODB_HEADERS,
-      timeout: 5000 // Timeout de 5 secondes
+      timeout: 5000, // Timeout de 5 secondes
     });
     const endTime = performance.now();
 
@@ -112,29 +109,33 @@ export interface CostOfLivingData {
   food: number;
   transport: number;
   utilities: number;
+  country?: string; // pour stocker le pays si besoin
 }
 
-/**
- * Récupération des données de coût de la vie via Numbeo
- */
 export async function fetchCostOfLivingData(
   cityName: string
 ): Promise<CostOfLivingData> {
   try {
     console.log("💰 Récupération des coûts pour:", cityName);
     const startTime = performance.now();
-    
+
     const response = await axios.get(NUMBEO_BASE_URL, {
       headers: NUMBEO_HEADERS,
       params: { city_name: cityName },
-      timeout: 5000
+      timeout: 5000,
     });
-    
+
     const endTime = performance.now();
     console.log(`⚡ Temps de réponse: ${Math.round(endTime - startTime)}ms`);
 
     const data = response.data;
     const prices = data.prices || [];
+
+    // Pour récupérer le pays, Numbeo (ou l'API) peut le donner (à adapter selon la réponse).
+    // Dans le cas où l'API ne fournit pas le pays, on pourrait essayer un fallback.
+    // data.city_country ou un autre champ si l'API l'envoie...
+
+    const cityCountry = data.city_country || "Inconnu"; // exemple
 
     // Calcul des moyennes par catégorie
     const housing = calculateAverageForCategory(prices, ["Rent", "Apartment", "House"]);
@@ -144,7 +145,14 @@ export async function fetchCostOfLivingData(
 
     console.log("📊 Données calculées:", { housing, food, transport, utilities });
 
-    return { cityName, housing, food, transport, utilities };
+    return {
+      cityName,
+      housing,
+      food,
+      transport,
+      utilities,
+      country: cityCountry,
+    };
   } catch (error) {
     console.warn("⚠️ Utilisation des données simulées suite à une erreur");
     return {
@@ -153,6 +161,7 @@ export async function fetchCostOfLivingData(
       food: generateRandomCost(200, 500),
       transport: generateRandomCost(50, 150),
       utilities: generateRandomCost(100, 300),
+      country: "Pays inconnu",
     };
   }
 }

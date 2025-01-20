@@ -50,40 +50,6 @@ const Compare = () => {
       });
   }, [city1Id, city2Id]);
 
-  const [selectedCities, setSelectedCities] = useState<{
-    coordinates: [number, number][];
-    names: string[];
-  }>({
-    coordinates: [],
-    names: [],
-  });
-
-  const similarCities = [
-    {
-      name: "Ville Similaire 1",
-      country: "Pays 1",
-      similarityScore: 85,
-      costOfLiving: 95,
-    },
-    {
-      name: "Ville Similaire 2",
-      country: "Pays 2",
-      similarityScore: 80,
-      costOfLiving: 90,
-    },
-  ];
-
-  const externalResources = [
-    {
-      title: "Guide de voyage pour Paris",
-      url: "https://example.com/paris-guide",
-    },
-    {
-      title: "Blog sur le coût de la vie à Londres",
-      url: "https://example.com/london-cost",
-    },
-  ];
-
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -112,6 +78,35 @@ const Compare = () => {
   const city1Name = city1Data.cityName;
   const city2Name = city2Data.cityName;
 
+  // Exemple de création de données "similaires" plus dynamiques
+  // NB : Ça reste du faux data, mais au moins ce n’est plus des villes rigides.
+  const similarCities = [
+    {
+      name: `Similaire à ${city1Name}`,
+      country: city1Data.country ?? "Pays inconnu",
+      similarityScore: 84,
+      costOfLiving: 95,
+    },
+    {
+      name: `Similaire à ${city2Name}`,
+      country: city2Data.country ?? "Pays inconnu",
+      similarityScore: 79,
+      costOfLiving: 90,
+    },
+  ];
+
+  // Ressources qui renvoient vers des articles en rapport avec city1 / city2
+  const externalResources = [
+    {
+      title: `Guide de voyage pour ${city1Name}`,
+      url: "https://example.com/guide-city1",
+    },
+    {
+      title: `Informations sur le coût de la vie à ${city2Name}`,
+      url: "https://example.com/cost-of-living-city2",
+    },
+  ];
+
   const chartData = [
     {
       category: t("housing"),
@@ -139,19 +134,6 @@ const Compare = () => {
     city1Data.housing,
     city2Data.housing
   );
-
-  // Ajout des coordonnées réelles pour les villes
-  const getCityCoordinates = (cityName: string): [number, number] => {
-    // Ces coordonnées devraient idéalement venir de votre API
-    const cityCoordinates: { [key: string]: [number, number] } = {
-      "Moscow": [37.6173, 55.7558],
-      "Rdzawka": [19.9449, 49.6197],
-      // Ajoutez d'autres villes selon vos besoins
-    };
-    
-    console.log('Getting coordinates for city:', cityName);
-    return cityCoordinates[cityName] || [0, 0]; // Coordonnées par défaut si la ville n'est pas trouvée
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
@@ -192,12 +174,11 @@ const Compare = () => {
               {
                 name: city1Name,
                 country: city1Data.country || "Unknown",
-                coordinates: getCityCoordinates(city1Name),
+                // Coordonnées récupérées dans le composant (ou via un mini-dico)
               },
               {
                 name: city2Name,
                 country: city2Data.country || "Unknown",
-                coordinates: getCityCoordinates(city2Name),
               },
             ]}
             onCityClick={(city) => console.log("Ville sélectionnée:", city)}
@@ -235,7 +216,7 @@ const Compare = () => {
                     {t(diffHousing > 0 ? "moreExpensive" : "lessExpensive")} {city2Name}
                   </span>
                 </li>
-                {/* Idem pour 'foodInsight', 'transportInsight', 'utilitiesInsight' */}
+                {/* Tu peux en rajouter pour 'foodInsight', 'transportInsight', 'utilitiesInsight', etc. */}
               </ul>
             </Card>
           </div>

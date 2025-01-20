@@ -1,6 +1,6 @@
-import React from 'react';
-import { Card } from '@/components/ui/card';
-import { ExternalLink } from 'lucide-react';
+import React from "react";
+import { Card } from "@/components/ui/card";
+import { ExternalLink } from "lucide-react";
 
 interface SimilarCity {
   name: string;
@@ -32,10 +32,10 @@ const SimilarCities = ({ cities, onCitySelect }: SimilarCitiesProps) => {
           </div>
           <div className="mt-2">
             <p className="text-sm">
-              Similarité: {city.similarityScore}%
+              Similarité : {city.similarityScore}%
             </p>
             <p className="text-sm">
-              Coût de la vie: {city.costOfLiving}% de la référence
+              Coût de la vie : {city.costOfLiving}% de la référence
             </p>
           </div>
         </Card>

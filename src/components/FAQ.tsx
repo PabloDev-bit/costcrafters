@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Accordion,
   AccordionContent,
@@ -10,20 +10,24 @@ const FAQ = () => {
   const faqItems = [
     {
       question: "Comment les coûts sont-ils calculés ?",
-      answer: "Les coûts sont basés sur des données en temps réel collectées auprès de diverses sources fiables, incluant les prix moyens des logements, de la nourriture, des transports et des services essentiels."
+      answer:
+        "Les coûts sont basés sur des données en temps réel collectées auprès de diverses sources fiables, incluant les prix moyens des logements, de la nourriture, des transports et des services essentiels.",
     },
     {
       question: "À quelle fréquence les données sont-elles mises à jour ?",
-      answer: "Les données sont mises à jour mensuellement pour assurer la précision des comparaisons."
+      answer:
+        "Les données sont mises à jour mensuellement pour assurer la précision des comparaisons.",
     },
     {
       question: "Comment puis-je contribuer aux données ?",
-      answer: "Vous pouvez contribuer en partageant vos propres expériences et données via notre formulaire de contribution."
+      answer:
+        "Vous pouvez contribuer en partageant vos propres expériences et données via notre formulaire de contribution.",
     },
     {
       question: "Les prix incluent-ils les taxes ?",
-      answer: "Oui, tous les prix affichés incluent les taxes locales applicables."
-    }
+      answer:
+        "Oui, tous les prix affichés incluent les taxes locales applicables.",
+    },
   ];
 
   return (
