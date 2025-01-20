@@ -140,6 +140,19 @@ const Compare = () => {
     city2Data.housing
   );
 
+  // Ajout des coordonnées réelles pour les villes
+  const getCityCoordinates = (cityName: string): [number, number] => {
+    // Ces coordonnées devraient idéalement venir de votre API
+    const cityCoordinates: { [key: string]: [number, number] } = {
+      "Moscow": [37.6173, 55.7558],
+      "Rdzawka": [19.9449, 49.6197],
+      // Ajoutez d'autres villes selon vos besoins
+    };
+    
+    console.log('Getting coordinates for city:', cityName);
+    return cityCoordinates[cityName] || [0, 0]; // Coordonnées par défaut si la ville n'est pas trouvée
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
       <div className="max-w-7xl mx-auto space-y-8 animate-fade-in">
@@ -178,13 +191,13 @@ const Compare = () => {
             cities={[
               {
                 name: city1Name,
-                country: "Country 1",
-                coordinates: [2.3522, 48.8566],
+                country: city1Data.country || "Unknown",
+                coordinates: getCityCoordinates(city1Name),
               },
               {
                 name: city2Name,
-                country: "Country 2",
-                coordinates: [-0.1276, 51.5074],
+                country: city2Data.country || "Unknown",
+                coordinates: getCityCoordinates(city2Name),
               },
             ]}
             onCityClick={(city) => console.log("Ville sélectionnée:", city)}
